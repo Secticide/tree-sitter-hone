@@ -1,0 +1,32 @@
+{
+  "name": "tree-sitter-hone",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for the Hone programming language",
+  "keywords": [
+    "parser",
+    "tree-sitter",
+    "hone"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.26"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.hone",
+      "file-types": [
+        "hn"
+      ],
+      "highlights": "queries/highlights.scm",
+      "brackets": "queries/brackets.scm",
+      "indents": "queries/indents.scm"
+    }
+  ],
+  "allowScripts": {
+    "tree-sitter-cli@0.22.6": true
+  }
+}
