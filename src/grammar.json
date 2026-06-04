@@ -1323,6 +1323,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "fence_stmt"
+        },
+        {
+          "type": "SYMBOL",
           "name": "if_stmt"
         },
         {
@@ -1512,6 +1516,48 @@
         {
           "type": "STRING",
           "value": "continue"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "fence_stmt": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#fence"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "("
+                },
+                {
+                  "type": "FIELD",
+                  "name": "ordering",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  }
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -3456,18 +3502,6 @@
     }
   ],
   "conflicts": [
-    [
-      "_type",
-      "struct_literal"
-    ],
-    [
-      "ref_type",
-      "unary_expr"
-    ],
-    [
-      "generic_type",
-      "named_type"
-    ],
     [
       "method_call_expr",
       "field_expr"

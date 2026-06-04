@@ -2,7 +2,7 @@ name = "Hone"
 grammar = "hone"
 path_suffixes = ["hn"]
 line_comments = ["// "]
-block_comment = { start = "/*", end = "*/" }
+block_comment = ["/*", "*/"]
 word_characters = ["_"]
 tab_size = 4
 hard_tabs = false

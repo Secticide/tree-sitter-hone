@@ -35,12 +35,10 @@
 ; ── Special value keywords ────────────────────────────────────────────────────
 
 [ "true" "false" ] @boolean
-"null"        @constant.builtin
-"uninit"      @constant.builtin
-"self"        @variable.special
-"Self"        @type.builtin
-"void"        @type.builtin
-"unreachable" @keyword.control
+"self"             @variable.special
+(self_type)        @type.builtin
+(void_type)        @type.builtin
+(unreachable_expr) @keyword.control
 
 ; ── Compiler builtins ─────────────────────────────────────────────────────────
 
@@ -55,8 +53,9 @@
   "#alignof"
   "#likely"
   "#unlikely"
-  "#fence"
 ] @function.builtin
+
+(fence_stmt "#fence" @function.builtin)
 
 ; ── Primitive types ───────────────────────────────────────────────────────────
 
@@ -116,7 +115,6 @@
 
 ; ── Function calls ────────────────────────────────────────────────────────────
 
-(call_expr   callee: (identifier) @function.call)
 (method_call_expr method: (identifier) @function.method.call)
 
 ; ── Paths ─────────────────────────────────────────────────────────────────────
@@ -150,6 +148,6 @@
   "::"
 ] @operator
 
-[ "." ".." "..." ] @punctuation.delimiter
+[ "." ".." ] @punctuation.delimiter
 [ "," ";" ":" ]   @punctuation.delimiter
 [ "(" ")" "[" "]" "{" "}" ] @punctuation.bracket

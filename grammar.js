@@ -293,6 +293,7 @@ module.exports = grammar({
       $.break_stmt,
       $.continue_stmt,
       $.defer_stmt,
+      $.fence_stmt,
       $.if_stmt,
       $.while_stmt,
       $.for_stmt,
@@ -315,6 +316,12 @@ module.exports = grammar({
     return_stmt: $ => seq('return', optional($._expr), ';'),
     break_stmt:    $ => seq('break', ';'),
     continue_stmt: $ => seq('continue', ';'),
+
+    fence_stmt: $ => seq(
+      '#fence',
+      optional(seq('(', field('ordering', $.identifier), ')')),
+      ';',
+    ),
 
     defer_stmt: $ => seq('defer', $._stmt),
 

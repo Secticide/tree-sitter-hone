@@ -713,6 +713,10 @@
           "named": true
         },
         {
+          "type": "fence_stmt",
+          "named": true
+        },
+        {
           "type": "for_stmt",
           "named": true
         },
@@ -1072,6 +1076,10 @@
           "named": true
         },
         {
+          "type": "fence_stmt",
+          "named": true
+        },
+        {
           "type": "for_stmt",
           "named": true
         },
@@ -1375,6 +1383,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "fence_stmt",
+    "named": true,
+    "fields": {
+      "ordering": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -5165,6 +5189,10 @@
   },
   {
     "type": "#alignof",
+    "named": false
+  },
+  {
+    "type": "#fence",
     "named": false
   },
   {
