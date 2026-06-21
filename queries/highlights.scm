@@ -35,12 +35,10 @@
 ; ── Special value keywords ────────────────────────────────────────────────────
 
 [ "true" "false" ] @boolean
-"null"        @constant.builtin
-"uninit"      @constant.builtin
-"self"        @variable.special
-"Self"        @type.builtin
-"void"        @type.builtin
-"unreachable" @keyword.control
+"self"             @variable.special
+(self_type)        @type.builtin
+(void_type)        @type.builtin
+(unreachable_expr) @keyword.control
 
 ; ── Compiler builtins ─────────────────────────────────────────────────────────
 
@@ -55,12 +53,18 @@
   "#alignof"
   "#likely"
   "#unlikely"
-  "#fence"
 ] @function.builtin
+
+(fence_stmt "#fence" @function.builtin)
 
 ; ── Primitive types ───────────────────────────────────────────────────────────
 
 (primitive_type) @type.builtin
+
+; ── Named / generic type references ──────────────────────────────────────────
+
+(named_type) @type
+(generic_type name: (identifier) @type)
 
 ; ── Comments ──────────────────────────────────────────────────────────────────
 
@@ -69,14 +73,15 @@
 
 ; ── Literals ──────────────────────────────────────────────────────────────────
 
-(integer_literal) @number
-(float_literal)   @number.float
-(bool_literal)    @boolean
-(null_literal)    @constant.builtin
-(uninit_literal)  @constant.builtin
-(string_literal)  @string
-(cstring_literal) @string
-(char_literal)    @character
+(integer_literal)    @number
+(float_literal)      @number.float
+(bool_literal)       @boolean
+(null_literal)       @constant.builtin
+(uninit_literal)     @constant.builtin
+(string_literal)     @string
+(raw_string_literal) @string
+(cstring_literal)    @string
+(char_literal)       @character
 
 ; ── Declarations ──────────────────────────────────────────────────────────────
 
@@ -105,8 +110,8 @@
 
 ; ── Struct / enum members ─────────────────────────────────────────────────────
 
-(struct_field name: (identifier) @property)
-(enum_variant name: (identifier) @constant)
+(struct_field  name: (identifier) @property)
+(enum_variant  name: (identifier) @constant)
 
 ; ── Field access ──────────────────────────────────────────────────────────────
 
@@ -116,7 +121,7 @@
 
 ; ── Function calls ────────────────────────────────────────────────────────────
 
-(call_expr   callee: (identifier) @function.call)
+(call_expr callee: (callee_expr (identifier) @function.call))
 (method_call_expr method: (identifier) @function.method.call)
 
 ; ── Paths ─────────────────────────────────────────────────────────────────────
@@ -150,6 +155,6 @@
   "::"
 ] @operator
 
-[ "." ".." "..." ] @punctuation.delimiter
+[ "." ".." ] @punctuation.delimiter
 [ "," ";" ":" ]   @punctuation.delimiter
 [ "(" ")" "[" "]" "{" "}" ] @punctuation.bracket

@@ -13,7 +13,8 @@
   },
   "scripts": {
     "generate": "tree-sitter generate",
-    "test": "tree-sitter test"
+    "test": "tree-sitter test",
+    "sync-zed": "node -e \"const fs=require('fs');const dst='editors/zed/languages/hone';['highlights','brackets','indents'].forEach(f=>fs.copyFileSync('queries/'+f+'.scm',dst+'/'+f+'.scm'));console.log('queries/ -> editors/zed/languages/hone/ done');\""
   },
   "tree-sitter": [
     {

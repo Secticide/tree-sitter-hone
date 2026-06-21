@@ -58,7 +58,7 @@ module.exports = grammar({
       $.extern_fn,
       $.struct_def,
       $.enum_def,
-      $.bitset_def,
+
       $.extern_union_def,
       $.impl_block,
       $.mod_block,
@@ -171,25 +171,6 @@ module.exports = grammar({
         // Unit variant: `Red,` or `Red = 3,`
         optional(seq('=', field('value', $.integer_literal))),
       ),
-      ',',
-    ),
-
-    // ── Bitset ───────────────────────────────────────────────────────────
-
-    bitset_def: $ => seq(
-      optional('pub'),
-      'bitset',
-      // Optional explicit backing type: `bitset(u8) Name { ... }`
-      optional(seq('(', field('repr', $._type), ')')),
-      field('name', $.identifier),
-      '{',
-      repeat($.bitset_variant),
-      '}',
-    ),
-
-    bitset_variant: $ => seq(
-      field('name', $.identifier),
-      optional(seq('=', field('value', $.integer_literal))),
       ',',
     ),
 
@@ -566,8 +547,7 @@ module.exports = grammar({
       prec.left(PREC.SHIFT,   seq($._expr, choice('<<', '>>'), $._expr)),
       prec.left(PREC.ADD,     seq($._expr, choice('+', '-'), $._expr)),
       prec.left(PREC.MUL,     seq($._expr, choice('*', '/', '%', '+%', '-%', '*%'), $._expr)),
-      // `in` operator: bitset membership check `needle in haystack`
-      prec.left(PREC.AND - 1, seq($._expr, 'in', $._expr)),
+
     ),
 
     unary_expr: $ => prec(PREC.UNARY, seq(

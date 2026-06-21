@@ -15,7 +15,6 @@
   "impl"
   "struct"
   "enum"
-  "bitset"
   "union"
   "type"
   "if"
@@ -62,6 +61,11 @@
 
 (primitive_type) @type.builtin
 
+; ── Named / generic type references ──────────────────────────────────────────
+
+(named_type) @type
+(generic_type name: (identifier) @type)
+
 ; ── Comments ──────────────────────────────────────────────────────────────────
 
 (line_comment)  @comment
@@ -85,7 +89,6 @@
 (extern_fn     name: (identifier) @function)
 (struct_def    name: (identifier) @type)
 (enum_def      name: (identifier) @type)
-(bitset_def    name: (identifier) @type)
 (extern_union_def name: (identifier) @type)
 (impl_block    name: (identifier) @type)
 (type_alias    name: (identifier) @type)
@@ -105,11 +108,10 @@
 ; Type parameters
 (type_param name: (identifier) @type)
 
-; ── Struct / enum / bitset members ────────────────────────────────────────────
+; ── Struct / enum members ─────────────────────────────────────────────────────
 
 (struct_field  name: (identifier) @property)
 (enum_variant  name: (identifier) @constant)
-(bitset_variant name: (identifier) @constant)
 
 ; ── Field access ──────────────────────────────────────────────────────────────
 
