@@ -3080,6 +3080,14 @@
         },
         {
           "type": "SYMBOL",
+          "name": "sqrt_expr"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "abs_expr"
+        },
+        {
+          "type": "SYMBOL",
           "name": "likely_expr"
         },
         {
@@ -4295,6 +4303,48 @@
         {
           "type": "SYMBOL",
           "name": "_type"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "sqrt_expr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#sqrt"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_expr"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "abs_expr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#abs"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_expr"
         },
         {
           "type": "STRING",
