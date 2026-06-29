@@ -42,6 +42,9 @@ module.exports = grammar({
     // be part of the enclosing expression (reduce).  GLR resolves by context.
     [$.fn_ptr_type],
     [$.extern_fn_ptr_type],
+    // `[]` is ambiguous: empty array_expr vs start of slice_type `[]T`.
+    // GLR resolves by what follows (`;` / `,` / operator → array_expr; type → slice_type).
+    [$.slice_type, $.array_expr],
   ],
 
   rules: {
@@ -98,7 +101,7 @@ module.exports = grammar({
       field('name', $.identifier),
       field('params', $.param_list),
       optional(field('return_type', $._type)),
-      ';',
+      choice(';', field('body', $.block)),
     ),
 
     param_list: $ => seq(
@@ -119,6 +122,7 @@ module.exports = grammar({
     ),
 
     named_param: $ => seq(
+      optional('#noalias'),
       field('name', $.identifier),
       ':',
       field('type', $._type),
@@ -222,8 +226,20 @@ module.exports = grammar({
       'impl',
       field('name', choice($.identifier, $.generic_type)),
       '{',
-      repeat($.function_def),
+      repeat(choice($.function_def, $.impl_const)),
       '}',
+    ),
+
+    // `let FOO: Type = const_expr;` inside an impl block.
+    impl_const: $ => seq(
+      optional(choice('pub', 'intern')),
+      'let',
+      field('name', $.identifier),
+      ':',
+      field('type', $._type),
+      '=',
+      field('value', $._rval),
+      ';',
     ),
 
     // ── Modules ──────────────────────────────────────────────────────────
@@ -384,6 +400,7 @@ module.exports = grammar({
       $.cond_match_stmt,
       $.print_stmt,
       $.keep_stmt,
+      $.atomic_store_stmt,
       $.hash_if_stmt,
       $.block,
       $.expr_stmt,
@@ -591,8 +608,7 @@ module.exports = grammar({
       $.floor_expr,
       $.ceil_expr,
       $.round_expr,
-      $.likely_expr,
-      $.unlikely_expr,
+      $.atomic_expr,
       $.path_expr,
       $.self_expr,
       $.identifier,
@@ -788,10 +804,10 @@ module.exports = grammar({
 
     array_expr: $ => seq(
       '[',
-      choice(
+      optional(choice(
         seq($._rval, repeat(seq(',', $._rval)), optional(',')),
         seq($._rval, ';', $._expr),  // repeat syntax [val; N]
-      ),
+      )),
       ']',
     ),
 
@@ -803,8 +819,38 @@ module.exports = grammar({
     ceil_expr: $ => seq('#ceil', '(', $._expr, ')'),
     round_expr: $ => seq('#round', '(', $._expr, ')'),
 
-    likely_expr: $ => seq('#likely', '(', $._expr, ')'),
-    unlikely_expr: $ => seq('#unlikely', '(', $._expr, ')'),
+    // `#atomic_load(&x, acquire)` and all RMW / cmpxchg forms — return a value.
+    atomic_expr: $ => seq(
+      choice(
+        '#atomic_load',
+        '#atomic_xchg',
+        '#atomic_add',
+        '#atomic_sub',
+        '#atomic_and',
+        '#atomic_or',
+        '#atomic_xor',
+        '#atomic_min',
+        '#atomic_max',
+        '#atomic_umin',
+        '#atomic_umax',
+        '#atomic_cmpxchg',
+        '#atomic_cmpxchg_weak',
+      ),
+      '(',
+      $._rval,
+      repeat(seq(',', $._rval)),
+      ')',
+    ),
+
+    // `#atomic_store(&mut x, val, release);` — statement only, no return value.
+    atomic_store_stmt: $ => seq(
+      '#atomic_store',
+      '(',
+      $._rval,
+      repeat(seq(',', $._rval)),
+      ')',
+      ';',
+    ),
 
     // Path: `Mod::item`, `Enum::Variant`, `pkg::mod::item` (3+ levels), or
     // `Enum(T)::Variant` (generic qualifier — `Enum(T)` is a call_expr).

@@ -48,6 +48,7 @@
   "#if"
   "#inline"
   "#noinline"
+  "#noalias"
 ] @keyword.directive
 
 [
@@ -60,6 +61,20 @@
   "#round"
   "#likely"
   "#unlikely"
+  "#atomic_load"
+  "#atomic_store"
+  "#atomic_xchg"
+  "#atomic_add"
+  "#atomic_sub"
+  "#atomic_and"
+  "#atomic_or"
+  "#atomic_xor"
+  "#atomic_min"
+  "#atomic_max"
+  "#atomic_umin"
+  "#atomic_umax"
+  "#atomic_cmpxchg"
+  "#atomic_cmpxchg_weak"
 ] @function.builtin
 
 (fence_stmt "#fence" @function.builtin)
@@ -110,6 +125,7 @@
 (extern_union_def name: (identifier) @type)
 (impl_block    name: (identifier) @type)
 (impl_block    name: (generic_type name: (identifier) @type))
+(impl_const    name: (identifier) @constant)
 (type_alias    name: (identifier) @type)
 
 ; Module names
